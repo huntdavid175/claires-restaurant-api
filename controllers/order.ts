@@ -9,7 +9,7 @@ const getAllOrders = async (req: Request, res: Response) => {
     const allOrders = await orderRepository.find();
     res.status(200).json({ data: allOrders });
   } catch (error) {
-    console.log(error);
+    res.status(404).json({ status: 404, message: "Resource not found" });
   }
 };
 
@@ -30,6 +30,8 @@ const createOrder = async (req: Request, res: Response) => {
       ? orderedProductDetails.food_name
       : "";
     newOrder.quantity = quantity;
+    newOrder.size = size;
+
     newOrder.paid = false;
     newOrder.processed = false;
     newOrder.total = quantity * 100;

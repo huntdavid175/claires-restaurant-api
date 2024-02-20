@@ -20,6 +20,9 @@ export class Order {
   quantity: number;
 
   @Column()
+  size: string;
+
+  @Column()
   paid: boolean;
 
   @Column()
