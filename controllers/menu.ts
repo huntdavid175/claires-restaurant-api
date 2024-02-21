@@ -16,13 +16,20 @@ const getMenu = async (req: Request, res: Response) => {
 
 // Get by all categories
 const getMenuByCategories = async (req: Request, res: Response) => {
+  const { allMenu } = req.query;
+
   const categoryRepository = AppDataSource.getRepository(Category);
+  if (allMenu) {
+    const categoriesByMenu = await categoryRepository.find({
+      relations: { menus: true },
+    });
 
-  const categoriesByMenu = await categoryRepository.find({
-    relations: { menus: true },
-  });
+    return res.status(200).json({ data: categoriesByMenu });
+  } else {
+    const categories = await categoryRepository.find();
 
-  res.status(200).json({ data: categoriesByMenu });
+    return res.status(200).json({ data: categories });
+  }
 };
 
 // Add a menu item
