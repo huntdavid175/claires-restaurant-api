@@ -10,7 +10,7 @@ const getMenu = async (req: Request, res: Response) => {
   const allMenu = await menuRepository.find({
     relations: { price: true, category: true },
   });
-  console.log(allMenu);
+  // console.log(allMenu);
   res.status(200).json({ data: allMenu });
 };
 
