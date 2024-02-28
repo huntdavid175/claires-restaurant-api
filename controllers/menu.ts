@@ -14,24 +14,6 @@ const getMenu = async (req: Request, res: Response) => {
   res.status(200).json({ data: allMenu });
 };
 
-// Get by all categories
-const getMenuByCategories = async (req: Request, res: Response) => {
-  const { allMenu } = req.query;
-
-  const categoryRepository = AppDataSource.getRepository(Category);
-  if (allMenu) {
-    const categoriesByMenu = await categoryRepository.find({
-      relations: { menus: true },
-    });
-
-    return res.status(200).json({ data: categoriesByMenu });
-  } else {
-    const categories = await categoryRepository.find();
-
-    return res.status(200).json({ data: categories });
-  }
-};
-
 // Add a menu item
 const addMenu = async (req: Request, res: Response) => {
   const { food_name, description, category, small, medium, large, extraLarge } =
@@ -84,4 +66,44 @@ const addMenu = async (req: Request, res: Response) => {
   }
 };
 
-export { addMenu, getMenu, getMenuByCategories };
+const getMenuByCategory = async (req: Request, res: Response) => {
+  const { id }: { id?: number } = req.params;
+  console.log(req.params);
+
+  const categoryRepository = AppDataSource.getRepository(Category);
+
+  try {
+    const category = await categoryRepository.findOne({
+      where: { id: id },
+      relations: { menus: true },
+    });
+
+    if (category) {
+      res.status(200).json({ data: category });
+    } else {
+      res.status(404).json({ message: "Category not found" });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// Get by all categories
+const getMenuByCategories = async (req: Request, res: Response) => {
+  const { allMenu } = req.query;
+
+  const categoryRepository = AppDataSource.getRepository(Category);
+  if (allMenu) {
+    const categoriesByMenu = await categoryRepository.find({
+      relations: { menus: true },
+    });
+
+    return res.status(200).json({ data: categoriesByMenu });
+  } else {
+    const categories = await categoryRepository.find();
+
+    return res.status(200).json({ data: categories });
+  }
+};
+
+export { addMenu, getMenu, getMenuByCategories, getMenuByCategory };

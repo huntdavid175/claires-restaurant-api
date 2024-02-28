@@ -1,7 +1,11 @@
 import express, { Router, Request, Response } from "express";
 
-import { addMenu, getMenu, getMenuByCategories } from "../controllers/menu";
-import { getMenuByCategory } from "../controllers/category";
+import {
+  addMenu,
+  getMenu,
+  getMenuByCategories,
+  getMenuByCategory,
+} from "../controllers/menu";
 
 const router: Router = express.Router();
 
@@ -12,6 +16,9 @@ router.post("/", addMenu);
 router.get("/", getMenu);
 
 // Retrieve menus by category
-router.get("/category", getMenuByCategory);
+router.get("/categories/:id", getMenuByCategory);
+
+// Retrieve all categries
+router.get("/categories/", getMenuByCategories);
 
 export default router;

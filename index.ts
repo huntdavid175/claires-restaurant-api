@@ -6,7 +6,6 @@ import { AppDataSource } from "./data-source";
 
 import MenuRoutes from "./routes/menu";
 import OrderRoutes from "./routes/order";
-import CategoryRoutes from "./routes/category";
 
 const app: Application = express();
 
@@ -14,7 +13,6 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use("/menu", MenuRoutes);
 app.use("/orders", OrderRoutes);
-app.use("/category", CategoryRoutes);
 
 AppDataSource.initialize()
   .then(() => {
