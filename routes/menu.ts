@@ -6,6 +6,7 @@ import {
   getMenuByCategories,
   getMenuByCategory,
 } from "../controllers/menu";
+import { sendWhatsappMessage } from "../controllers/whatsapp";
 
 const router: Router = express.Router();
 
@@ -14,6 +15,8 @@ router.post("/", addMenu);
 
 // Retrieve menu items route
 router.get("/", getMenu);
+
+router.post("/whatsapptest", sendWhatsappMessage);
 
 // Retrieve menus by category
 router.get("/categories/:id", getMenuByCategory);
