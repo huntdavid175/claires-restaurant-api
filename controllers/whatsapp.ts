@@ -15,7 +15,6 @@ const sendWhatsappMessage = async (req: Request, res: Response) => {
   };
 
   whatsapp.sendMessage(data);
-  //   whatsapp.showParams();
 };
 
 export { sendWhatsappMessage };
