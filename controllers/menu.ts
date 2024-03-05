@@ -4,9 +4,30 @@ import { Price } from "../entity/price";
 import { Category } from "../entity/category";
 import { AppDataSource } from "../data-source";
 
+const menuRepository = AppDataSource.getRepository(Menu);
+
+const getSingleMeal = async (req: Request, res: Response) => {
+  const { id }: { id?: number } = req.params;
+
+  try {
+    const singleMenu = await menuRepository.find({
+      where: { id: id },
+      relations: { price: true },
+    });
+
+    if (singleMenu) {
+      return res.status(200).json({ data: singleMenu, message: "Success" });
+    } else {
+      return res.status(404).json({ message: "Resource not found" });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // Get all menu items
 const getMenu = async (req: Request, res: Response) => {
-  const menuRepository = AppDataSource.getRepository(Menu);
+  // const menuRepository = AppDataSource.getRepository(Menu);
   const allMenu = await menuRepository.find({
     relations: { price: true, category: true },
   });
@@ -34,7 +55,7 @@ const addMenu = async (req: Request, res: Response) => {
 
   menu.price = price;
 
-  const menuRepository = AppDataSource.getRepository(Menu);
+  // const menuRepository = AppDataSource.getRepository(Menu);
 
   // Find if a category exists
   const categoryRepository = AppDataSource.getRepository(Category);
@@ -68,7 +89,6 @@ const addMenu = async (req: Request, res: Response) => {
 
 const getMenuByCategory = async (req: Request, res: Response) => {
   const { id }: { id?: number } = req.params;
-  console.log(req.params);
 
   const categoryRepository = AppDataSource.getRepository(Category);
 
@@ -106,4 +126,10 @@ const getMenuByCategories = async (req: Request, res: Response) => {
   }
 };
 
-export { addMenu, getMenu, getMenuByCategories, getMenuByCategory };
+export {
+  addMenu,
+  getMenu,
+  getMenuByCategories,
+  getMenuByCategory,
+  getSingleMeal,
+};

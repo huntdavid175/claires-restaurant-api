@@ -3,6 +3,40 @@ import { whatsapp } from "../lib/whatsapp";
 import axios from "axios";
 
 const token = process.env.WHATSAPP_ACCESS_TOKEN as string;
+const data = {
+  messaging_product: "whatsapp",
+  recipient_type: "individual",
+  to: "233545817432",
+  type: "template",
+  template: {
+    name: "welcome",
+    language: {
+      code: "en_US",
+    },
+    components: [
+      {
+        type: "header",
+        parameters: [
+          {
+            type: "image",
+            image: {
+              link: "https://www.allrecipes.com/thmb/iXKYAl17eIEnvhLtb4WxM7wKqTc=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/240376-homemade-pepperoni-pizza-Beauty-3x4-1-6ae54059c23348b3b9a703b6a3067a44.jpg",
+            },
+          },
+        ],
+      },
+      //   {
+      //     type: "body",
+      //     parameters: [
+      //       {
+      //         type: "text",
+      //         text: "",
+      //       },
+      //     ],
+      //   },
+    ],
+  },
+};
 
 const sendWhatsappMessage = async (req: Request, res: Response) => {
   const data = {
@@ -69,20 +103,21 @@ const webhookPostRequests = (req: Request, res: Response) => {
 
       console.log(`From: ${from}`);
       console.log(`Message: ${msg_body}`);
-      axios({
-        method: "POST", // Required, HTTP method, a string, e.g. POST, GET
-        url:
-          "https://graph.facebook.com/v19.0/" +
-          phone_number_id +
-          "/messages?access_token=" +
-          token,
-        data: {
-          messaging_product: "whatsapp",
-          to: from,
-          text: { body: "Ack: " + msg_body },
-        },
-        headers: { "Content-Type": "application/json" },
-      });
+      whatsapp.sendMessage(data);
+      //   axios({
+      //     method: "POST", // Required, HTTP method, a string, e.g. POST, GET
+      //     url:
+      //       "https://graph.facebook.com/v19.0/" +
+      //       phone_number_id +
+      //       "/messages?access_token=" +
+      //       token,
+      //     data: {
+      //       messaging_product: "whatsapp",
+      //       to: from,
+      //       text: { body: "Ack: " + msg_body },
+      //     },
+      //     headers: { "Content-Type": "application/json" },
+      //   });
     }
     res.sendStatus(200);
   } else {
