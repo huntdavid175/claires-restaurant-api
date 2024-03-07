@@ -10,7 +10,7 @@ const getSingleMeal = async (req: Request, res: Response) => {
   const { id }: { id?: number } = req.params;
 
   try {
-    const singleMenu = await menuRepository.find({
+    const singleMenu = await menuRepository.findOne({
       where: { id: id },
       relations: { price: true },
     });
@@ -28,22 +28,36 @@ const getSingleMeal = async (req: Request, res: Response) => {
 // Get all menu items
 const getMenu = async (req: Request, res: Response) => {
   // const menuRepository = AppDataSource.getRepository(Menu);
-  const allMenu = await menuRepository.find({
-    relations: { price: true, category: true },
-  });
-  // console.log(allMenu);
-  res.status(200).json({ data: allMenu });
+
+  try {
+    const allMenu = await menuRepository.find({
+      relations: { price: true, category: true },
+    });
+    // console.log(allMenu);
+    res.status(200).json({ data: allMenu });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 // Add a menu item
 const addMenu = async (req: Request, res: Response) => {
-  const { food_name, description, category, small, medium, large, extraLarge } =
-    req.body;
+  const {
+    food_name,
+    description,
+    category,
+    small,
+    medium,
+    large,
+    extraLarge,
+    imageUrl,
+  } = req.body;
 
   // create new menu
   const menu = new Menu();
   menu.food_name = food_name;
   menu.description = description;
+  menu.image_url = imageUrl;
 
   // create new menu-price
   const price = new Price();
@@ -64,7 +78,7 @@ const addMenu = async (req: Request, res: Response) => {
     where: { name: category },
   });
 
-  // Add menu to category if category already exists
+  // Add menu to category if category already exists..
   if (categoryExists) {
     menu.category = categoryExists;
     const responseMenu = await menuRepository.save(menu);
@@ -97,9 +111,9 @@ const getMenuByCategory = async (req: Request, res: Response) => {
       where: { id: id },
       relations: { menus: true },
     });
-
+    console.log(category);
     if (category) {
-      res.status(200).json({ data: category });
+      return res.status(200).json({ message: "Success", data: category });
     } else {
       res.status(404).json({ message: "Category not found" });
     }
@@ -122,7 +136,11 @@ const getMenuByCategories = async (req: Request, res: Response) => {
   } else {
     const categories = await categoryRepository.find();
 
-    return res.status(200).json({ data: categories });
+    if (categories) {
+      return res.status(200).json({ message: "Success", data: categories });
+    } else {
+      return res.status(404).json({ message: "Category not found" });
+    }
   }
 };
 

@@ -19,6 +19,9 @@ export class Menu {
   @Column()
   description: string;
 
+  @Column()
+  image_url: string;
+
   @OneToOne(() => Price, (price) => price.menu, { cascade: true })
   price: Price;
 
