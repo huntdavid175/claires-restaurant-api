@@ -1,10 +1,14 @@
 import { Request, Response } from "express";
 import { Menu } from "../entity/menu";
 import { Price } from "../entity/price";
+import { Size } from "../entity/sizes";
 import { Category } from "../entity/category";
-import { AppDataSource } from "../data-source";
+import { AppDataSource } from "../database/data-source";
 
 const menuRepository = AppDataSource.getRepository(Menu);
+const categoryRepository = AppDataSource.getRepository(Category);
+const sizeRepository = AppDataSource.getRepository(Size);
+const priceRepository = AppDataSource.getRepository(Price);
 
 const getSingleMeal = async (req: Request, res: Response) => {
   const { id }: { id?: number } = req.params;
@@ -12,7 +16,7 @@ const getSingleMeal = async (req: Request, res: Response) => {
   try {
     const singleMenu = await menuRepository.findOne({
       where: { id: id },
-      relations: { price: true },
+      relations: { sizes: true },
     });
 
     if (singleMenu) {
@@ -31,7 +35,8 @@ const getMenu = async (req: Request, res: Response) => {
 
   try {
     const allMenu = await menuRepository.find({
-      relations: { price: true, category: true },
+      relations: ["sizes", "category"],
+      // "sizes.prices",
     });
     // console.log(allMenu);
     res.status(200).json({ data: allMenu });
@@ -42,16 +47,7 @@ const getMenu = async (req: Request, res: Response) => {
 
 // Add a menu item
 const addMenu = async (req: Request, res: Response) => {
-  const {
-    food_name,
-    description,
-    category,
-    small,
-    medium,
-    large,
-    extraLarge,
-    imageUrl,
-  } = req.body;
+  const { food_name, description, category, prices, imageUrl } = req.body;
 
   // create new menu
   const menu = new Menu();
@@ -59,21 +55,30 @@ const addMenu = async (req: Request, res: Response) => {
   menu.description = description;
   menu.image_url = imageUrl;
 
-  // create new menu-price
-  const price = new Price();
-  price.small = small;
-  price.medium = medium;
-  price.large = large;
-  price.extralarge = extraLarge;
-  price.menu = menu;
+  const sizes = prices.map((item: { size: string; price: number }) => {
+    console.log(item.size);
+    const size = new Size();
+    size.name = item.size;
+    size.price = Number(item.price);
+    return size;
+    // menu.sizes.push(size);
+  });
+  console.log(sizes);
+  menu.sizes = sizes;
 
-  menu.price = price;
+  // create new menu-price
+  // const price = new Price();
+  // price.small = small;
+  // price.medium = medium;
+  // price.large = large;
+  // price.extralarge = extraLarge;
+  // price.menu = menu;
+
+  // menu.price = price;
 
   // const menuRepository = AppDataSource.getRepository(Menu);
 
   // Find if a category exists
-  const categoryRepository = AppDataSource.getRepository(Category);
-
   const categoryExists = await categoryRepository.findOne({
     where: { name: category },
   });
@@ -81,10 +86,11 @@ const addMenu = async (req: Request, res: Response) => {
   // Add menu to category if category already exists..
   if (categoryExists) {
     menu.category = categoryExists;
+
     const responseMenu = await menuRepository.save(menu);
     const result = await menuRepository.findOne({
       where: { id: responseMenu.id },
-      relations: { price: true, category: true },
+      relations: { sizes: true, category: true },
     });
     res.status(201).json({ data: { result } });
   } else {
@@ -95,7 +101,7 @@ const addMenu = async (req: Request, res: Response) => {
     const responseMenu = await menuRepository.save(menu);
     const result = await menuRepository.findOne({
       where: { id: responseMenu.id },
-      relations: { price: true, category: true },
+      relations: { sizes: true, category: true },
     });
     res.status(201).json({ data: { result } });
   }

@@ -1,7 +1,7 @@
 import { Response, Request } from "express";
 import { Order } from "../entity/orders";
 import { Menu } from "../entity/menu";
-import { AppDataSource } from "../data-source";
+import { AppDataSource } from "../database/data-source";
 
 const getAllOrders = async (req: Request, res: Response) => {
   try {
@@ -19,7 +19,7 @@ const createOrder = async (req: Request, res: Response) => {
   const menuRepository = AppDataSource.getRepository(Menu);
   const orderedProductDetails = await menuRepository.findOne({
     where: { id: productId },
-    relations: { price: true },
+    relations: { sizes: true },
   });
   console.log(orderedProductDetails);
 

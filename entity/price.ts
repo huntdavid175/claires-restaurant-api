@@ -4,8 +4,10 @@ import {
   Column,
   JoinColumn,
   OneToOne,
+  ManyToOne,
 } from "typeorm";
 import { Menu } from "./menu";
+import { Size } from "./sizes";
 
 @Entity()
 export class Price {
@@ -13,18 +15,12 @@ export class Price {
   id: number;
 
   @Column("int")
-  small: number;
+  price: number;
 
-  @Column("int")
-  medium: number;
+  // @OneToOne(() => Menu, (menu) => menu.price)
+  // @JoinColumn()
+  // menu: Menu;
 
-  @Column("int")
-  large: number;
-
-  @Column("int")
-  extralarge: number;
-
-  @OneToOne(() => Menu, (menu) => menu.price)
-  @JoinColumn()
-  menu: Menu;
+  // @ManyToOne(() => Size, (size) => size.prices)
+  // size: Size;
 }
