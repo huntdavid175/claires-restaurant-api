@@ -4,9 +4,8 @@ import axios from "axios";
 const router: Router = express.Router();
 
 const url = "https://api.paystack.co/charge";
-const authorization =
-  "Authorization: sk_test_76a53397a8e58bc471bb2c10b8715559d6a416e5";
-const content_type = "Content-Type: application/json";
+const secretKey = process.env.PAYSTACK_SECRET_KEY;
+
 const data = {
   email: "huntdavid175@gmail.com",
   amount: "10000",
@@ -32,8 +31,7 @@ const testFunc = async (req: Request, res: Response) => {
     const response = await axios.post(url, data, {
       headers: {
         "Content-Type": "application/json",
-        Authorization:
-          "Bearer sk_test_76a53397a8e58bc471bb2c10b8715559d6a416e5",
+        Authorization: `Bearer ${secretKey}`,
       },
     });
 
