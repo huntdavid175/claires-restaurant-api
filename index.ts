@@ -4,12 +4,12 @@ import cors from "cors";
 import "reflect-metadata";
 import multer from "multer";
 import { AppDataSource, initializeDb } from "./database/data-source";
-import { Size } from "./entity/sizes";
 
 import MenuRoutes from "./routes/menu";
 import OrderRoutes from "./routes/order";
 import WebhookRoutes from "./routes/webhook";
 import ImageRoutes from "./routes/image";
+import TestRoutes from "./routes/test";
 
 const app: Application = express();
 
@@ -26,6 +26,7 @@ app.use("/orders", OrderRoutes);
 app.use("/webhook", WebhookRoutes);
 
 app.use("/images", uploadFiles.single("image"), ImageRoutes);
+app.use("/test", TestRoutes);
 
 //Initialize database connection
 // AppDataSource.initialize()

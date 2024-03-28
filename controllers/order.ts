@@ -21,7 +21,14 @@ const createOrder = async (req: Request, res: Response) => {
     where: { id: productId },
     relations: { sizes: true },
   });
-  console.log(orderedProductDetails);
+
+  const orderedSize = orderedProductDetails?.sizes.find((item) => {
+    return item.name.toLowerCase() === size;
+  });
+
+  if (!orderedSize) {
+    return res.status(404).json({ message: "Order size doesn't exist" });
+  }
 
   try {
     const newOrder = new Order();
@@ -34,7 +41,7 @@ const createOrder = async (req: Request, res: Response) => {
 
     newOrder.paid = false;
     newOrder.processed = false;
-    newOrder.total = quantity * 100;
+    newOrder.total = quantity * orderedSize.price;
 
     await AppDataSource.manager.save(newOrder);
 
