@@ -3,11 +3,14 @@ import {
   webhookGetRequests,
   webhookPostRequests,
 } from "../controllers/whatsapp";
+import { paymentWebHook } from "../controllers/webhook";
 
 const router: Router = express.Router();
 
-router.get("/", webhookGetRequests);
+// router.get("/", webhookGetRequests);
 
-router.post("/", webhookPostRequests);
+// router.post("/", webhookPostRequests);
+
+router.post("/payment", paymentWebHook);
 
 export default router;
