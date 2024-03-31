@@ -1,13 +1,17 @@
 import { Response, Request } from "express";
+
 import { Order } from "../entity/orders";
 import { Menu } from "../entity/menu";
 import { AppDataSource } from "../database/data-source";
 import { initiatePayment } from "../lib/payment";
+import { Payment } from "../entity/payments";
 
 const getAllOrders = async (req: Request, res: Response) => {
   try {
     const orderRepository = AppDataSource.getRepository(Order);
-    const allOrders = await orderRepository.find();
+    const allOrders = await orderRepository.find({
+      relations: { payment: true },
+    });
     res.status(200).json({ data: allOrders });
   } catch (error) {
     res.status(404).json({ status: 404, message: "Resource not found" });
@@ -33,6 +37,9 @@ const createOrder = async (req: Request, res: Response) => {
 
   try {
     const newOrder = new Order();
+    const newPayment = new Payment();
+
+    // Adding details for orders
     newOrder.address = address;
     newOrder.phone = phone;
     newOrder.productName = orderedProductDetails?.food_name
@@ -45,6 +52,15 @@ const createOrder = async (req: Request, res: Response) => {
     newOrder.processed = false;
     newOrder.total = quantity * orderedSize.price;
 
+    //Adding details for payment
+    newPayment.payment_method = "MTN";
+    newPayment.payment_currency = "GHS";
+    newPayment.transaction_amount = quantity * orderedSize.price;
+
+    //Link payment to order
+    newOrder.payment = newPayment;
+
+    //Save order
     const response = await AppDataSource.manager.save(newOrder);
 
     //Check if order was saved and then send payment request

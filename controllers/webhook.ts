@@ -1,11 +1,13 @@
 import { Request, Response } from "express";
 import crypto from "crypto";
 
-import { Order } from "../entity/orders";
+import { Payment } from "../entity/payments";
 import { AppDataSource } from "../database/data-source";
 
+import { PaymentStatus } from "../entity/payments";
+
 const secret = process.env.PAYSTACK_SECRET_KEY;
-const orderRepository = AppDataSource.getRepository(Order);
+const paymentRepository = AppDataSource.getRepository(Payment);
 
 const paymentWebHook = async (req: Request, res: Response) => {
   const hash = crypto
@@ -22,14 +24,18 @@ const paymentWebHook = async (req: Request, res: Response) => {
       if (event.data.status === "success") {
         const orderId = event.data.metadata.custom_fields[0].order_id;
 
-        const order = await orderRepository.findOne({
-          where: { orderId: orderId },
+        // Retrieve the order payment from  db
+
+        const payment = await paymentRepository.findOne({
+          where: {
+            order: { orderId: orderId },
+          },
         });
 
-        if (order) {
-          //   console.log(order);
-          order.paid = true;
-          AppDataSource.manager.save(order);
+        //If there is that order in db, update it
+        if (payment) {
+          payment.payment_status = PaymentStatus.Paid;
+          AppDataSource.manager.save(payment);
         }
       }
     }

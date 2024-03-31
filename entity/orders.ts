@@ -3,7 +3,11 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
+  OneToOne,
+  JoinColumn,
 } from "typeorm";
+
+import { Payment } from "./payments";
 
 @Entity()
 export class Order {
@@ -36,4 +40,8 @@ export class Order {
 
   @CreateDateColumn()
   orderDate: Date;
+
+  @OneToOne(() => Payment, (payment) => payment.order, { cascade: true })
+  @JoinColumn()
+  payment: Payment;
 }

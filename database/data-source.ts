@@ -6,6 +6,7 @@ import { Category } from "../entity/category";
 import { Extras } from "../entity/extras";
 import { Order } from "../entity/orders";
 import { Size } from "../entity/sizes";
+import { Payment } from "../entity/payments";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -16,9 +17,9 @@ export const AppDataSource = new DataSource({
   database: "clairepizza",
   synchronize: true,
   logging: false,
-  entities: [Menu, Price, Category, Extras, Order, Size],
+  entities: [Menu, Price, Category, Extras, Order, Size, Payment],
   subscribers: [],
-  migrations: [],
+  migrations: ["./database/migration/addPaymentTable"],
 });
 
 export const initializeDb = async () => {
