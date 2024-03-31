@@ -12,10 +12,15 @@ const paymentWebHook = (req: Request, res: Response) => {
   if (hash == req.headers["x-paystack-signature"]) {
     const event = req.body;
 
-    console.log(event);
+    if (event.event === "charge.success") {
+      console.log(event);
+      //   console.log(event.data.metadata.custom_fields);
+    }
+
+    // console.log(event);
   }
 
-  res.send(200);
+  res.sendStatus(200);
 };
 
 export { paymentWebHook };

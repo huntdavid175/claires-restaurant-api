@@ -14,8 +14,7 @@ const data = {
     custom_fields: [
       {
         value: "makurdi",
-        display_name: "Donation for",
-        variable_name: "donation_for",
+        order_id: 1,
       },
     ],
   },

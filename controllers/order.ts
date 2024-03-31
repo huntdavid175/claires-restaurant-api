@@ -2,6 +2,7 @@ import { Response, Request } from "express";
 import { Order } from "../entity/orders";
 import { Menu } from "../entity/menu";
 import { AppDataSource } from "../database/data-source";
+import { initiatePayment } from "../lib/payment";
 
 const getAllOrders = async (req: Request, res: Response) => {
   try {
@@ -14,7 +15,7 @@ const getAllOrders = async (req: Request, res: Response) => {
 };
 
 const createOrder = async (req: Request, res: Response) => {
-  const { productId, address, quantity, size } = req.body;
+  const { productId, address, quantity, size, phone, provider } = req.body;
 
   const menuRepository = AppDataSource.getRepository(Menu);
   const orderedProductDetails = await menuRepository.findOne({
@@ -33,6 +34,7 @@ const createOrder = async (req: Request, res: Response) => {
   try {
     const newOrder = new Order();
     newOrder.address = address;
+    newOrder.phone = phone;
     newOrder.productName = orderedProductDetails?.food_name
       ? orderedProductDetails.food_name
       : "";
@@ -43,7 +45,12 @@ const createOrder = async (req: Request, res: Response) => {
     newOrder.processed = false;
     newOrder.total = quantity * orderedSize.price;
 
-    await AppDataSource.manager.save(newOrder);
+    const response = await AppDataSource.manager.save(newOrder);
+
+    //Check if order was saved and then send payment request
+    if (response) {
+      initiatePayment(phone, provider, response.total, response.orderId);
+    }
 
     res.status(201).json({ message: "Order created" });
   } catch (error) {

@@ -17,6 +17,9 @@ export class Order {
   address: string;
 
   @Column()
+  phone: string;
+
+  @Column()
   quantity: number;
 
   @Column()
