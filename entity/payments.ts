@@ -33,7 +33,7 @@ export class Payment {
   payment_status: PaymentStatus;
 
   @Column({ nullable: true })
-  authorization_code: Number;
+  authorization_code: String;
 
   @Column({ nullable: true })
   payment_gateway: String;

@@ -10,7 +10,7 @@ const initiatePayment = async (
   const secretKey = process.env.PAYSTACK_SECRET_KEY;
 
   const data = {
-    email: "huntdavid175@gmail.com",
+    email: "tonekin994@sentrau.com",
     amount: String(amountToPay * 100),
     currency: "GHS",
     metadata: {

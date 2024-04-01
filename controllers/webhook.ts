@@ -18,7 +18,7 @@ const paymentWebHook = async (req: Request, res: Response) => {
   if (hash == req.headers["x-paystack-signature"]) {
     const event = req.body;
 
-    //Check is event is charge success
+    //Check if event is charge success
     if (event.event === "charge.success") {
       //Check if charge was successful and update as paid in order
       if (event.data.status === "success") {
@@ -31,10 +31,15 @@ const paymentWebHook = async (req: Request, res: Response) => {
             order: { orderId: orderId },
           },
         });
-
+        // console.log(event.data);
         //If there is that order in db, update it
         if (payment) {
           payment.payment_status = PaymentStatus.Paid;
+          payment.payment_gateway = event.data.gateway_response;
+          payment.payment_date = event.data.paid_at;
+          payment.authorization_code =
+            event.data.authorization.authorization_code;
+          payment.payment_reference = event.data.reference;
           AppDataSource.manager.save(payment);
         }
       }
