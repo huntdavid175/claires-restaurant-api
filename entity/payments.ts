@@ -7,7 +7,7 @@ import {
   Entity,
 } from "typeorm";
 
-import { Order } from "./orders";
+import { PizzaOrder } from "./orders";
 
 export enum PaymentStatus {
   Pending = "Pending",
@@ -44,7 +44,7 @@ export class Payment {
   @Column({ nullable: true })
   payment_reference: String;
 
-  @OneToOne(() => Order, (order) => order.payment)
+  @OneToOne(() => PizzaOrder, (pizzaOrder) => pizzaOrder.payment)
   //   @JoinColumn()
-  order: Order;
+  pizzaOrder: PizzaOrder;
 }

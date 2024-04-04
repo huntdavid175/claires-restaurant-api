@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
 
-import { Order } from "../entity/orders";
+import { PizzaOrder } from "../entity/orders";
 import { Menu } from "../entity/menu";
 import { AppDataSource } from "../database/data-source";
 import { initiatePayment } from "../lib/payment";
@@ -8,7 +8,7 @@ import { Payment } from "../entity/payments";
 
 const getAllOrders = async (req: Request, res: Response) => {
   try {
-    const orderRepository = AppDataSource.getRepository(Order);
+    const orderRepository = AppDataSource.getRepository(PizzaOrder);
     const allOrders = await orderRepository.find({
       relations: { payment: true },
     });
@@ -36,7 +36,7 @@ const createOrder = async (req: Request, res: Response) => {
   }
 
   try {
-    const newOrder = new Order();
+    const newOrder = new PizzaOrder();
     const newPayment = new Payment();
 
     // Adding details for orders

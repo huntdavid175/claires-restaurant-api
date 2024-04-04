@@ -28,7 +28,7 @@ const paymentWebHook = async (req: Request, res: Response) => {
 
         const payment = await paymentRepository.findOne({
           where: {
-            order: { orderId: orderId },
+            pizzaOrder: { orderId: orderId },
           },
         });
         // console.log(event.data);

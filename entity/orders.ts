@@ -10,7 +10,7 @@ import {
 import { Payment } from "./payments";
 
 @Entity()
-export class Order {
+export class PizzaOrder {
   @PrimaryGeneratedColumn()
   orderId: number;
 
@@ -41,7 +41,7 @@ export class Order {
   @CreateDateColumn()
   orderDate: Date;
 
-  @OneToOne(() => Payment, (payment) => payment.order, { cascade: true })
+  @OneToOne(() => Payment, (payment) => payment.pizzaOrder, { cascade: true })
   @JoinColumn()
   payment: Payment;
 }

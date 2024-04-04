@@ -4,7 +4,7 @@ import { Menu } from "../entity/menu";
 import { Price } from "../entity/price";
 import { Category } from "../entity/category";
 import { Extras } from "../entity/extras";
-import { Order } from "../entity/orders";
+import { PizzaOrder } from "../entity/orders";
 import { Size } from "../entity/sizes";
 import { Payment } from "../entity/payments";
 
@@ -17,7 +17,7 @@ export const AppDataSource = new DataSource({
   database: "clairepizza",
   synchronize: true,
   logging: false,
-  entities: [Menu, Price, Category, Extras, Order, Size, Payment],
+  entities: [Menu, Price, Category, Extras, PizzaOrder, Size, Payment],
   subscribers: [],
   migrations: ["./database/migration/addPaymentTable"],
 });
