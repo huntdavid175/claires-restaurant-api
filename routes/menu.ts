@@ -7,12 +7,14 @@ import {
   getMenuByCategory,
   getSingleMeal,
 } from "../controllers/menu";
+import { ValidateMenuCreate } from "../entity/schemas/validator";
+
 import { sendWhatsappMessage } from "../controllers/whatsapp";
 
 const router: Router = express.Router();
 
 // Add menu item route
-router.post("/", addMenu);
+router.post("/", ValidateMenuCreate, addMenu);
 
 // Retrieve menu items route
 router.get("/", getMenu);
