@@ -31,7 +31,7 @@ const paymentWebHook = async (req: Request, res: Response) => {
             pizzaOrder: { orderId: orderId },
           },
         });
-        // console.log(event.data);
+
         //If there is that order in db, update it
         if (payment) {
           payment.payment_status = PaymentStatus.Paid;

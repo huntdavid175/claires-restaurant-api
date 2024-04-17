@@ -9,6 +9,7 @@ import MenuRoutes from "./routes/menu";
 import OrderRoutes from "./routes/order";
 import WebhookRoutes from "./routes/webhook";
 import ImageRoutes from "./routes/image";
+import PaymentRoutes from "./routes/payment";
 import TestRoutes from "./routes/test";
 
 const app: Application = express();
@@ -26,6 +27,7 @@ app.use("/orders", OrderRoutes);
 app.use("/webhook", WebhookRoutes);
 
 app.use("/images", uploadFiles.single("image"), ImageRoutes);
+app.use("/payment", PaymentRoutes);
 app.use("/test", TestRoutes);
 
 //Initialize database connection

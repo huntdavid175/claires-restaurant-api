@@ -11,6 +11,6 @@ const router: Router = express.Router();
 
 // router.post("/", webhookPostRequests);
 
-router.post("/payment", paymentWebHook);
+router.post("/", paymentWebHook);
 
 export default router;
