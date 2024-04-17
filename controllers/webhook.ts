@@ -40,7 +40,9 @@ const paymentWebHook = async (req: Request, res: Response) => {
           payment.authorization_code =
             event.data.authorization.authorization_code;
           payment.payment_reference = event.data.reference;
-          AppDataSource.manager.save(payment);
+          // payment.transaction_id = event.data.id;
+          // AppDataSource.manager.save(payment);
+          paymentRepository.save(payment);
         }
       }
     }

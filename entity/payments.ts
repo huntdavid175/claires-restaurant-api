@@ -8,6 +8,7 @@ import {
 } from "typeorm";
 
 import { PizzaOrder } from "./orders";
+import { bigint } from "zod";
 
 export enum PaymentStatus {
   Pending = "Pending",
@@ -19,6 +20,9 @@ export enum PaymentStatus {
 export class Payment {
   @PrimaryGeneratedColumn()
   payment_id: number;
+
+  @Column({ type: "bigint", nullable: true })
+  transaction_id: string;
 
   @Column({ nullable: true })
   payment_date: Date;

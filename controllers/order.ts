@@ -5,6 +5,7 @@ import { Menu } from "../entity/menu";
 import { AppDataSource } from "../database/data-source";
 import { initiatePayment } from "../lib/payment";
 import { Payment } from "../entity/payments";
+import { updateTransactionWithId } from "../lib/helpers";
 
 const getAllOrders = async (req: Request, res: Response) => {
   try {
@@ -65,7 +66,15 @@ const createOrder = async (req: Request, res: Response) => {
 
     //Check if order was saved and then send payment request
     if (response) {
-      initiatePayment(phone, provider, response.total, response.orderId);
+      const res = await initiatePayment(
+        phone,
+        provider,
+        response.total,
+        response.orderId
+      );
+
+      // Update the order payment with the transaction id
+      // await updateTransactionWithId(response.orderId, res.data.id);
     }
 
     res.status(201).json({ message: "Order created" });

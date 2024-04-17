@@ -51,7 +51,7 @@ export const OrderSchema = z.object({
     })
     .trim()
     .min(1, "Phone number cannot be empty"),
-  size: z.enum(["sm", "md", "lg", "xl"], {
+  size: z.enum(["small", "medium", "large", "extralarge"], {
     errorMap: (issue, ctx) => {
       return { message: "Invalid size" };
     },

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { updateTransactionWithId } from "./helpers";
 
 const initiatePayment = async (
   customerPhoneNumber: string,
@@ -10,7 +11,7 @@ const initiatePayment = async (
   const secretKey = process.env.PAYSTACK_SECRET_KEY;
 
   const data = {
-    email: "tonekin994@sentrau.com",
+    email: "vipom90239@etopys.com",
     amount: String(amountToPay * 100),
     currency: "GHS",
     metadata: {
@@ -35,7 +36,8 @@ const initiatePayment = async (
       },
     });
 
-    console.log(response.data);
+    await updateTransactionWithId(orderId, response.data.data.id);
+    return response.data;
   } catch (error: any) {
     console.log(error.response);
   }
