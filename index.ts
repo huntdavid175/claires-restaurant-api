@@ -15,9 +15,13 @@ app.use(cors());
 app.use(Routes);
 
 //Connect to database
-initializeDb();
+initializeDb().then((result) => {
+  if (result != -1) {
+    console.log("Connected to database");
 
-//Start server
-app.listen("3000", () => {
-  console.log("Serving on port 3000");
+    //Start server
+    app.listen("3000", () => {
+      console.log("Serving on port 3000");
+    });
+  }
 });
